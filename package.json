@@ -1,0 +1,76 @@
+{
+  "name": "@linked.cm/mcp-ont",
+  "description": "The vocabulary of connected agents for Linked apps: connections, capabilities over shapes, callables and operations, the layers that grant them, and the reasons a request is refused.",
+  "author": {
+    "name": "Semantu"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "version": "0.0.0",
+  "linked": {
+    "kind": "ontology"
+  },
+  "type": "module",
+  "main": "lib/esm/index.js",
+  "module": "lib/esm/index.js",
+  "//types": "Correct as written, do not 'fix' it: typesVersions below is applied to the types field too, so \"index.d.ts\" resolves to lib/esm/index.d.ts. Writing that literal path applies the mapping twice (lib/esm/lib/esm/index.d.ts) and breaks node10 resolution. Verify with ts.resolveModuleName under node10 AND bundler, not by looking for the file on disk.",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "src",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "linked dev",
+    "build": "linked build",
+    "typecheck": "tsc -p tsconfig-esm.json --noEmit",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "linked",
+    "linked data",
+    "semantic web",
+    "web3"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/esm/index.d.ts",
+      "import": "./lib/esm/index.js"
+    },
+    "./*.js": {
+      "types": "./lib/esm/*.d.ts",
+      "import": "./lib/esm/*.js"
+    },
+    "./*": {
+      "types": "./lib/esm/*.d.ts",
+      "import": "./lib/esm/*.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "lib/esm/*"
+      ]
+    }
+  },
+  "dependencies": {
+    "@_linked/core": "^2.41.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "@_linked/cli": "^1.57.0",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9",
+    "@changesets/cli": "^3.0.0"
+  },
+  "linkedOntologies": {
+    "mcp": {
+      "namespace": "https://linked.cm/ont/mcp/"
+    }
+  }
+}
