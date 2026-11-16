@@ -58,6 +58,9 @@ mcp:kind a owl:ObjectProperty ; rdfs:domain mcp:Capability ; rdfs:range mcp:Kind
   rdfs:label "kind"@en .
 mcp:onShape a owl:ObjectProperty ; rdfs:domain mcp:Capability ;
   rdfs:label "on shape"@en ; rdfs:comment "A node shape the capability covers (with its sub-shapes)."@en .
+mcp:AnyShape a owl:NamedIndividual ;
+  rdfs:label "any shape"@en ;
+  rdfs:comment "As the object of mcp:onShape: every shape of the app's own catalog the call is decoded in, without Linked's built-in shapes. With no catalog from the host it covers nothing."@en .
 mcp:onCallable a owl:DatatypeProperty ; rdfs:domain mcp:Capability ; rdfs:range xsd:string ;
   rdfs:label "on callable"@en ; rdfs:comment "A declared provider method the capability covers, as <shape IRI or package name>#<method>."@en .
 mcp:coversOperation a owl:DatatypeProperty ; rdfs:domain mcp:Capability ; rdfs:range xsd:string ;

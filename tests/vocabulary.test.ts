@@ -15,7 +15,7 @@ describe('the mcp vocabulary', () => {
     for (const term of [
       'Connection', 'person', 'agentName', 'maker', 'via', 'scope', 'grants', 'settings',
       'keyHash', 'keyHint', 'connectedAt', 'lastActedAt', 'disconnectedAt',
-      'Capability', 'kind', 'onShape', 'onCallable', 'coversOperation', 'actionPhrase', 'order',
+      'Capability', 'kind', 'onShape', 'AnyShape', 'onCallable', 'coversOperation', 'actionPhrase', 'order',
       'Read', 'Create', 'Update', 'Delete', 'Call', 'Perform',
       'Layer', 'ConnectionLayer', 'Preset', 'grantsCapability',
       'RefusalReason', 'NotGranted', 'OutOfScope', 'UnknownTool', 'BadInput', 'RateLimited', 'RefusedByApp',

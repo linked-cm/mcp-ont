@@ -2,6 +2,9 @@
 // Data: src/data/mcp.ttl
 import {ns} from './mcp.data.js';
 
+/** As the object of mcp:onShape: every shape of the app's own catalog the call is decoded in, without Linked's built-in shapes. */
+export const AnyShape = /*#__PURE__*/ ns('AnyShape');
+
 /** The request could not be read */
 export const BadInput = /*#__PURE__*/ ns('BadInput');
 
