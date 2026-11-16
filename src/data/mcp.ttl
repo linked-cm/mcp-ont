@@ -2,6 +2,97 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix mcp: <https://linked.cm/ont/mcp/> .
 
-<https://linked.cm/ont/mcp/> a owl:Ontology .
+<https://linked.cm/ont/mcp/> a owl:Ontology ;
+  rdfs:label "Connected agents"@en ;
+  rdfs:comment "An agent a person connects to a Linked app, what it may do there, and why a request of it was refused. The agent acts as its person, never more: every layer of grants narrows it."@en .
+
+# ── Connections ──────────────────────────────────────────────────────────────
+
+mcp:Connection a owl:Class ;
+  rdfs:label "connection"@en ;
+  rdfs:comment "One agent connected by one person. It has its own key, of which only a fingerprint is kept."@en .
+
+mcp:person a owl:ObjectProperty ; rdfs:domain mcp:Connection ;
+  rdfs:label "person"@en ; rdfs:comment "The person the agent acts for."@en .
+mcp:agentName a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:string ;
+  rdfs:label "agent name"@en ; rdfs:comment "The agent's name, as the agent reports it."@en .
+mcp:maker a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:string ;
+  rdfs:label "maker"@en ; rdfs:comment "Who made the agent, as the agent reports it."@en .
+mcp:via a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:string ;
+  rdfs:label "via"@en ; rdfs:comment "How the agent connects, for example a protocol name."@en .
+mcp:scope a owl:ObjectProperty ; rdfs:domain mcp:Connection ;
+  rdfs:label "scope"@en ; rdfs:comment "A place the agent may work; the app gives places their meaning."@en .
+mcp:grants a owl:ObjectProperty ; rdfs:domain mcp:Connection ; rdfs:range mcp:Capability ;
+  rdfs:label "grants"@en ; rdfs:comment "A capability the person gave this connection."@en .
+mcp:settings a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:string ;
+  rdfs:label "settings"@en ; rdfs:comment "The app's own settings for the connection, as JSON the vocabulary does not interpret."@en .
+mcp:keyHash a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:string ;
+  rdfs:label "key fingerprint"@en ; rdfs:comment "The SHA-256 of the connection's key. The key itself is never stored."@en .
+mcp:keyHint a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:string ;
+  rdfs:label "key hint"@en ; rdfs:comment "The last characters of the key, to recognise it by."@en .
+mcp:connectedAt a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:dateTime ;
+  rdfs:label "connected at"@en .
+mcp:lastActedAt a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:dateTime ;
+  rdfs:label "last acted at"@en .
+mcp:disconnectedAt a owl:DatatypeProperty ; rdfs:domain mcp:Connection ; rdfs:range xsd:dateTime ;
+  rdfs:label "disconnected at"@en ; rdfs:comment "From this moment its key finds nothing."@en .
+
+# ── Capabilities ─────────────────────────────────────────────────────────────
+
+mcp:Capability a owl:Class ;
+  rdfs:label "capability"@en ;
+  rdfs:comment "One thing an agent may do: one or more kinds of act, on shapes, on callables, or on operations an app declares."@en .
+
+mcp:Kind a owl:Class ; rdfs:label "kind of act"@en .
+mcp:Read a mcp:Kind ; rdfs:label "read"@en .
+mcp:Create a mcp:Kind ; rdfs:label "create"@en .
+mcp:Update a mcp:Kind ; rdfs:label "update"@en .
+mcp:Delete a mcp:Kind ; rdfs:label "delete"@en .
+mcp:Call a mcp:Kind ; rdfs:label "call"@en .
+mcp:Perform a mcp:Kind ; rdfs:label "perform"@en ; rdfs:comment "Perform an operation the app declares."@en .
+
+mcp:kind a owl:ObjectProperty ; rdfs:domain mcp:Capability ; rdfs:range mcp:Kind ;
+  rdfs:label "kind"@en .
+mcp:onShape a owl:ObjectProperty ; rdfs:domain mcp:Capability ;
+  rdfs:label "on shape"@en ; rdfs:comment "A node shape the capability covers (with its sub-shapes)."@en .
+mcp:onCallable a owl:DatatypeProperty ; rdfs:domain mcp:Capability ; rdfs:range xsd:string ;
+  rdfs:label "on callable"@en ; rdfs:comment "A declared provider method the capability covers, as <shape IRI or package name>#<method>."@en .
+mcp:coversOperation a owl:DatatypeProperty ; rdfs:domain mcp:Capability ; rdfs:range xsd:string ;
+  rdfs:label "covers operation"@en ; rdfs:comment "An operation the app declares. One operation, one capability."@en .
+mcp:actionPhrase a owl:DatatypeProperty ; rdfs:domain mcp:Capability ;
+  rdfs:label "action phrase"@en ; rdfs:comment "How a refusal says it: \"… doesn't allow agents to {action}\"."@en .
+mcp:order a owl:DatatypeProperty ; rdfs:range xsd:integer ; rdfs:label "order"@en .
+
+# ── Layers and presets ───────────────────────────────────────────────────────
+
+mcp:Layer a owl:Class ;
+  rdfs:label "layer"@en ;
+  rdfs:comment "One party that grants capabilities. What an agent may do is what every layer grants; nothing below widens what is above. The person's own rights are not a layer here: the app's access rules apply to the agent as to the person."@en .
+
+mcp:ConnectionLayer a mcp:Layer ; mcp:order 100 ;
+  rdfs:label "This connection"@en ;
+  rdfs:comment "What the person gave this connection when they approved it."@en .
+
+mcp:Preset a owl:Class ;
+  rdfs:label "preset"@en ; rdfs:comment "A named bundle of capabilities a layer can grant."@en .
+mcp:grantsCapability a owl:ObjectProperty ; rdfs:domain mcp:Preset ; rdfs:range mcp:Capability ;
+  rdfs:label "grants capability"@en .
+
+# ── Refusals ─────────────────────────────────────────────────────────────────
+
+mcp:RefusalReason a owl:Class ; rdfs:label "refusal reason"@en .
+mcp:NotGranted a mcp:RefusalReason ;
+  rdfs:label "Not allowed"@en ; rdfs:comment "No capability every layer grants covers it."@en .
+mcp:OutOfScope a mcp:RefusalReason ;
+  rdfs:label "Outside where it may work"@en .
+mcp:UnknownTool a mcp:RefusalReason ;
+  rdfs:label "No such tool"@en .
+mcp:BadInput a mcp:RefusalReason ;
+  rdfs:label "The request could not be read"@en .
+mcp:RateLimited a mcp:RefusalReason ;
+  rdfs:label "Too many requests"@en .
+mcp:RefusedByApp a mcp:RefusalReason ;
+  rdfs:label "Refused by the app"@en ; rdfs:comment "The app's own access rules refused it, as they would for the person."@en .
